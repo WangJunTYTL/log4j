@@ -27,7 +27,7 @@ import org.apache.log4j.spi.LoggingEvent;
 
    @author Ceki G&uuml;lc&uuml; 
 */
-public interface Appender {
+public interface Appender {  // 用于实现日志输出
 
   /**
      Add a filter to the end of the filter list.
@@ -70,7 +70,7 @@ public interface Appender {
      Loggers will call the <code>doAppend</code> method of appender
      implementations in order to log. */
   public
-  void doAppend(LoggingEvent event);
+  void doAppend(LoggingEvent event); // 输出log log信息被包装成LoggingEvent对象
 
 
   /**
@@ -110,7 +110,7 @@ public interface Appender {
      @since 1.1
   */
   public
-  Layout getLayout();
+  Layout getLayout(); // appender输出样式
   
 
   /**

@@ -242,7 +242,7 @@ public abstract class AppenderSkeleton implements Appender, OptionHandler {
     FILTER_LOOP:
     while(f != null) {
       switch(f.decide(event)) {
-      case Filter.DENY: return;
+      case Filter.DENY: return;  // 对LoggingEvent进行过滤处理  在log1.x版本已经有了这个概念
       case Filter.ACCEPT: break FILTER_LOOP;
       case Filter.NEUTRAL: f = f.getNext();
       }
