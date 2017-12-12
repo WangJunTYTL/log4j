@@ -47,7 +47,7 @@ import java.util.ResourceBundle;
   * replaced by the {@link Logger} <em>subclass</em></b></font>. It
   * will be kept around to preserve backward compatibility until mid
   * 2003.
-  * 
+  *
   * <p><code>Logger</code> is a subclass of Category, i.e. it extends
   * Category. In other words, a logger <em>is</em> a category. Thus,
   * all operations that can be performed on a category can be
@@ -57,24 +57,24 @@ import java.util.ResourceBundle;
   * only <code>Logger</code> instances. In order to preserve backward
   * compatibility, methods that previously accepted category objects
   * still continue to accept category objects.
-  * 
+  *
   * <p>For example, the following are all legal and will work as
   * expected.
-  * 
+  *
    <pre>
     &nbsp;&nbsp;&nbsp;// Deprecated form:
     &nbsp;&nbsp;&nbsp;Category cat = Category.getInstance("foo.bar")
-   
+
     &nbsp;&nbsp;&nbsp;// Preferred form for retrieving loggers:
     &nbsp;&nbsp;&nbsp;Logger logger = Logger.getLogger("foo.bar")
    </pre>
-   
+
   *  <p>The first form is deprecated and should be avoided.
-  * 
+  *
   *  <p><b>There is absolutely no need for new client code to use or
   *  refer to the <code>Category</code> class.</b> Whenever possible,
   *  please avoid referring to it or using it.
-  * 
+  *
   * <p>See the <a href="../../../../manual.html">short manual</a> for an
   * introduction on this class.
   * <p>
@@ -82,7 +82,7 @@ import java.util.ResourceBundle;
   *  for log4j 1.3</a> for a more detailed discussion.
   *
   * @author Ceki G&uuml;lc&uuml;
-  * @author Anders Kristensen 
+  * @author Anders Kristensen
   */
 public class Category implements AppenderAttachable {
 
@@ -121,7 +121,7 @@ public class Category implements AppenderAttachable {
   protected LoggerRepository repository;
 
 
-  AppenderAttachableImpl aai;
+  AppenderAttachableImpl aai; // 当前logger 关联配置的appender列表
 
   /** Additivity is set to true by default, that is children inherit
       the appenders of their ancestors by default. If this variable is
@@ -199,18 +199,18 @@ public class Category implements AppenderAttachable {
 
     for(Category c = this; c != null; c=c.parent) {
       // Protected against simultaneous call to addAppender, removeAppender,...
-      synchronized(c) {
+      synchronized(c) { // 这里可能会存在同步控制锁争夺的问题，这里为什么需要？
 	if(c.aai != null) {
-	  writes += c.aai.appendLoopOnAppenders(event);
+	  writes += c.aai.appendLoopOnAppenders(event); // 循环输出到每一个appender
 	}
-	if(!c.additive) {
+	if(!c.additive) { // 如果设置false 则终止向上传播
 	  break;
 	}
       }
     }
 
     if(writes == 0) {
-      repository.emitNoAppenderWarning(this);
+      repository.emitNoAppenderWarning(this); // 没有找到一个可用的appender
     }
   }
 
@@ -406,7 +406,7 @@ public class Category implements AppenderAttachable {
      @return Enumeration An enumeration of the appenders in this category.  */
   synchronized
   public
-  Enumeration getAllAppenders() {
+  Enumeration getAllAppenders() { // 得到与这个logger所有关联的appender
     if(aai == null)
       return NullEnumeration.getInstance();
     else
@@ -436,7 +436,7 @@ public class Category implements AppenderAttachable {
      quickly as possible.
    */
   public
-  Level getEffectiveLevel() {
+  Level getEffectiveLevel() { // 得到该log的级别，如果没有设置，就继承
     for(Category c = this; c != null; c=c.parent) {
       if(c.level != null)
 	return c.level;
@@ -447,7 +447,7 @@ public class Category implements AppenderAttachable {
   /**
     *
     * @deprecated Please use the the {@link #getEffectiveLevel} method
-    * instead.  
+    * instead.
     * */
   public
   Priority getChainedPriority() {
@@ -522,7 +522,7 @@ public class Category implements AppenderAttachable {
 
  /**
   * @deprecated Please make sure to use {@link Logger#getLogger(Class)} instead.
-  */ 
+  */
   public
   static
   Category getInstance(Class clazz) {

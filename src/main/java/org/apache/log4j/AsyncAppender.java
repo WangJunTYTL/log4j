@@ -65,7 +65,7 @@ public class AsyncAppender extends AppenderSkeleton
    * Event buffer, also used as monitor to protect itself and
    * discardMap from simulatenous modifications.
    */
-  private final List buffer = new ArrayList();
+  private final List buffer = new ArrayList(); // 异步appender msg缓冲区
 
   /**
    * Map of DiscardSummary objects keyed by logger name.
@@ -78,17 +78,17 @@ public class AsyncAppender extends AppenderSkeleton
   private int bufferSize = DEFAULT_BUFFER_SIZE;
 
   /** Nested appenders. */
-  AppenderAttachableImpl aai;
+  AppenderAttachableImpl aai;  // 子appender，异步appender里面嵌入子appender
 
   /**
    * Nested appenders.
    */
-  private final AppenderAttachableImpl appenders;
+  private final AppenderAttachableImpl appenders; //关联的 appender  list
 
   /**
    * Dispatcher.
    */
-  private final Thread dispatcher;
+  private final Thread dispatcher; // 日志消息消费者线程对象
 
   /**
    * Should location info be included in dispatched messages.
@@ -142,7 +142,7 @@ public class AsyncAppender extends AppenderSkeleton
     //   if dispatcher thread has died then
     //      append subsequent events synchronously
     //   See bug 23021
-    if ((dispatcher == null) || !dispatcher.isAlive() || (bufferSize <= 0)) {
+    if ((dispatcher == null) || !dispatcher.isAlive() || (bufferSize <= 0)) { // 错误配置或启动情况下转为同步
       synchronized (appenders) {
         appenders.appendLoopOnAppenders(event);
       }
@@ -507,13 +507,13 @@ public class AsyncAppender extends AppenderSkeleton
      * @param discardMap discard map, may not be null.
      * @param appenders  appenders, may not be null.
      */
-    public Dispatcher(
+    public Dispatcher(  // 消费buffer集合里的 msg
       final AsyncAppender parent, final List buffer, final Map discardMap,
       final AppenderAttachableImpl appenders) {
 
       this.parent = parent;
       this.buffer = buffer;
-      this.appenders = appenders;
+      this.appenders = appenders; // 消息下发appender列表
       this.discardMap = discardMap;
     }
 
@@ -537,7 +537,7 @@ public class AsyncAppender extends AppenderSkeleton
           //   extract pending events while synchronized
           //       on buffer
           //
-          synchronized (buffer) {
+          synchronized (buffer) {  // 这里用的不是阻塞队列，而是一个ArrayList 所以需要自己实现同步控制
             int bufferSize = buffer.size();
             isActive = !parent.closed;
 

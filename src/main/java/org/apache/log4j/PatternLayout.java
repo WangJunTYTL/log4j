@@ -500,7 +500,7 @@ public class PatternLayout extends Layout {
 
     while(c != null) {
       c.format(sbuf, event);
-      c = c.next;
+      c = c.next; // 链式模式去解析每一个消息格式规则
     }
     return sbuf.toString();
   }

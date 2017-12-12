@@ -118,9 +118,10 @@ public class LogManager {
       // If we have a non-null url, then delegate the rest of the
       // configuration to the OptionConverter.selectAndConfigure
       // method.
+        // 加载配置 在static块里面进行的初始化
       if(url != null) {
 	LogLog.debug("Using URL ["+url+"] for automatic log4j configuration.");      
-	OptionConverter.selectAndConfigure(url, configuratorClassName, 
+	OptionConverter.selectAndConfigure(url, configuratorClassName,
 					   LogManager.getLoggerRepository());
       } else {
 	LogLog.debug("Could not find resource: ["+configurationOptionStr+"].");

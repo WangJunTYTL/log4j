@@ -62,10 +62,10 @@ import org.apache.log4j.helpers.LogLog;
    @author Ceki G&uuml;lc&uuml;
 
 */
-public class Hierarchy implements LoggerRepository, RendererSupport {
+public class Hierarchy implements LoggerRepository, RendererSupport {// logger 对象存在层级关系
 
   private LoggerFactory defaultFactory;
-  private Vector listeners;
+  private Vector listeners; //
 
   Hashtable ht;
   Logger root;

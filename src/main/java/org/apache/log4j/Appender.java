@@ -55,7 +55,7 @@ public interface Appender {  // 用于实现日志输出
   void clearFilters();
 
   /**
-     Release any resources allocated within the appender such as file
+     Release any reso urces allocated within the appender such as file
      handles, network connections, etc.
 
      <p>It is a programming error to append to a closed appender.
